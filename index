@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Looking Beyond Medicine | Neuro Foundation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #078c80;
+            --primary-dark: #045c54;
+            --primary-light: rgba(7, 140, 128, 0.08);
+            --bg-color: #f4f7f6;
+            --text-dark: #1e293b;
+            --text-gray: #475569;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            color: var(--white);
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 30px rgba(7, 140, 128, 0.2);
+            position: relative;
+        }
+
+        .top-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .main-title {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+            line-height: 1.2;
+        }
+
+        /* Video Section */
+        .video-container {
+            max-width: 1100px;
+            margin: -80px auto 3rem;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 5px solid var(--white);
+        }
+
+        .waiting-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9));
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .pulse-circle {
+            width: 80px; height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(7, 140, 128, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(7, 140, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(7, 140, 128, 0); }
+        }
+
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        /* Layout Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px 3rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Cards Design */
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(7, 140, 128, 0.1);
+        }
+
+        .card:hover::before { transform: scaleX(1); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--primary-light);
+        }
+
+        .card-icon {
+            width: 45px; height: 45px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Details List */
+        .info-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .info-list i { color: var(--primary); margin-top: 5px; }
+
+        /* Speaker Section */
+        .speaker-box {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .speaker-img {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-light);
+            padding: 5px;
+        }
+
+        /* Typography */
+        .text-content { color: var(--text-gray); font-size: 1rem; text-align: justify; }
+        .text-content p { margin-bottom: 1rem; }
+        .highlight { color: var(--primary); font-weight: 600; }
+
+        .badge {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+            color: #fff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* Hospital Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gallery img {
+            width: 100%; height: 220px;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .gallery img:hover { transform: scale(1.02); }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .hero { padding: 3rem 1rem 5rem; border-radius: 0 0 30px 30px; }
+            .speaker-box { flex-direction: column; text-align: center; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="hero">
+        <div class="top-badge">A Monthly Gathering for Doctors</div>
+        <h1 class="main-title">LOOKING BEYOND MEDICINE</h1>
+        <p style="font-size: 1.1rem; opacity: 0.9;"><i class="fas fa-hospital"></i> Host: Neuro Foundation, Salem</p>
+    </header>
+
+    <!-- Video Section -->
+    <section class="video-container">
+        <div class="video-wrapper">
+            
+            <!-- ============================================================== -->
+            <!-- LIVE START AAGUMPOTHU INTHA KEELA IRUKA DIV-AH DELETE PANNUNGA -->
+            <div class="waiting-screen" id="waitingScreen">
+                <div class="pulse-circle"><i class="fas fa-video"></i></div>
+                <h2 style="font-size: 2rem; margin-bottom: 10px;">Live Stream Will Begin Shortly</h2>
+                <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 15px;">20th September 2026 | Starts at 10:30 AM</p>
+                <div style="background: var(--primary); padding: 5px 20px; border-radius: 20px; font-weight: bold;">Please Wait...</div>
+            </div>
+            <!-- INGA YOUTUBE IFRAME CODE AH PASTE PANNUNGA -->
+            <!-- Example: <iframe src="https://www.youtube.com/embed/XXXXXXX" ...></iframe> -->
+            <!-- ============================================================== -->
+
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="grid-2">
+            <!-- Event Details -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="far fa-calendar-check"></i></div>
+                    <h2 class="card-title">Event Details</h2>
+                </div>
+                <ul class="info-list" style="list-style: none;">
+                    <li><i class="far fa-calendar-alt"></i> <div><span class="highlight">20th September 2026</span> <br>(3rd Sunday)</div></li>
+                    <li><i class="far fa-clock"></i> <div>Starts at <span class="highlight">10.30 am</span></div></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <div>The Radisson, Salem</div></li>
+                    <li><i class="fas fa-hospital-user"></i> <div>Host: Neuro Foundation, Salem <br><small>Committed to Neurosciences</small></div></li>
+                </ul>
+                <div class="badge"><i class="fas fa-star"></i> TNMC Credit points Applicable</div>
+            </div>
+
+            <!-- Speaker Details -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-user-md"></i></div>
+                    <h2 class="card-title">The Speaker</h2>
+                </div>
+                <div class="speaker-box">
+                    <!-- REPLACE WITH ORIGINAL IMAGE -->
+                    <img src="speaker.jpg" alt="Dr. Roopesh Kumar" class="speaker-img" onerror="this.src='https://via.placeholder.com/150/078c80/fff?text=Speaker'">
+                    <div>
+                        <h3 style="font-size: 1.4rem; color: var(--text-dark);">Dr. Roopesh Kumar</h3>
+                        <p class="highlight">Director - Neurosurgery</p>
+                        <p style="color: var(--text-gray); font-size: 0.9rem;">MGM Healthcare, Chennai</p>
+                    </div>
+                </div>
+                <div class="text-content" style="font-size: 0.95rem;">
+                    <p>Internationally acclaimed Neurosurgeon bringing over 20 years of clinical expertise. Specialises in managing complex brain and spine tumours, minimally invasive cranial surgeries, and cerebrovascular surgeries.</p>
+                    <p>Recognised as one of the top 50 influential doctors on social media in India by SPAG FINN Partners.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2" style="grid-template-columns: 1fr;">
+            <!-- The Content -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                    <h2 class="card-title">The Content: The Rashomon Effect in Healthcare</h2>
+                </div>
+                <div class="text-content">
+                    <p><strong>"Rashomon"</strong>, the film directed by Akira Kurosawa and released in 1950, introduced the world to the "Rashomon effect"—a term used when different eyewitnesses give contradictory accounts of the same event.</p>
+                    <p>A single clinical encounter, a diagnosis delivered, a complication explained is remembered differently by the doctor who gave it, the patient who received it, and the family who stood beside them. None of these versions is a lie. Each is shaped by fear, hope, medical training, or grief.</p>
+                    <p>This session explores practical approaches to communication and consent that acknowledge this gap before it widens into mistrust. Come prepared to recognise a story you have lived through more than once—from more than one side.</p>
+                </div>
+            </div>
+
+            <!-- The Purpose -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                    <h2 class="card-title">The Purpose..</h2>
+                </div>
+                <div class="text-content">
+                    <p>Medicine trains us with rare precision in diagnosis, in techniques and in the discipline of healing. Yet beyond the clinic lies a world our training rarely touches: the psychology of trust, the building of institutions, the ethics of growth, communication, Finance, and now, the quiet arrival of AI reshaping medicine itself.</p>
+                    <p>This program is designed to bridge that gap. Each month, over lunch on the third Sunday, we turn to one such dimension—not as a lecture, but as a conversation among colleagues, each carrying experience the other has yet to discover.</p>
+                    <p class="highlight" style="font-size: 1.1rem; text-align: center; margin-top: 20px;">This is an invitation to look, together, at the parts of our profession we have long navigated alone.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hospital Section -->
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, #fff, #f0fdfa);">
+            <h2 class="card-title" style="margin-bottom: 5px;"><i class="fas fa-hospital-alt"></i> Neuro Foundation, Salem</h2>
+            <p class="highlight">Committed to Neurosciences</p>
+            <div class="gallery">
+                <!-- REPLACE WITH ORIGINAL IMAGES -->
+                <img src="hospital-1.jpg" alt="Hospital View" onerror="this.src='https://via.placeholder.com/400x250/078c80/fff?text=Hospital+1'">
+                <img src="hospital-2.jpg" alt="Hospital View" onerror="this.src='https://via.placeholder.com/400x250/078c80/fff?text=Hospital+2'">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
