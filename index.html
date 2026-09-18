@@ -261,11 +261,18 @@
 
     <!-- Video Section -->
     <section class="video-container">
-        <div class="video-wrapper">
-            
-         <iframe src="https://www.youtube.com/embed/jL1BJsGiIyY?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        <div class="video-wrapper" id="videoWrapper">
+    <!-- Waiting Screen -->
+    <div class="waiting-screen" id="waitingScreen">
+        <div class="pulse-circle"><i class="fas fa-video"></i></div>
+        <h2 style="font-size: 2rem; margin-bottom: 10px;">Live Stream Will Begin Shortly</h2>
+        <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 15px;">20th September 2026 | Starts at 10:30 AM</p>
+        <div style="background: var(--primary); padding: 5px 20px; border-radius: 20px; font-weight: bold;">Checking for live video...</div>
+    </div>
 
-        </div>
+    <!-- YouTube Iframe (First la hide aagi irukum) -->
+    <iframe id="liveFrame" src="" allow="autoplay; fullscreen" allowfullscreen style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"></iframe>
+</div>
     </section>
 
     <div class="container">
@@ -348,3 +355,43 @@
     </div>
 </body>
 </html>
+<script>
+    // Inga unga Google Apps Script Web App URL ah paste pannunga
+    const API_URL = "https://script.google.com/macros/s/AKfycbwA-AYynw5KFyO6oTHDho0DqvnoSDdtUx3cLVlHMGqHArDnDhZAKtr75kJ5qWpK-MY2/exec";
+
+    async function checkLiveVideo() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            
+            const waitingScreen = document.getElementById("waitingScreen");
+            const liveFrame = document.getElementById("liveFrame");
+
+            // Google sheet la video ID iruntha (Empty ah illana)
+            if(data.youtube_id && data.youtube_id.trim() !== "") {
+                const videoUrl = "https://www.youtube.com/embed/" + data.youtube_id.trim() + "?autoplay=1";
+                
+                // Puthu link iruntha mattum iframe src update aagum
+                if(liveFrame.src !== videoUrl) {
+                    liveFrame.src = videoUrl;
+                }
+                
+                waitingScreen.style.display = "none";
+                liveFrame.style.display = "block";
+            } else {
+                // Sheet empty ah iruntha waiting screen kaatum
+                waitingScreen.style.display = "flex";
+                liveFrame.style.display = "none";
+                liveFrame.src = "";
+            }
+        } catch (error) {
+            console.error("Live video check failed:", error);
+        }
+    }
+
+    // Page load aagum pothu check pannum
+    checkLiveVideo();
+
+    // Ovvoru 30 seconds kum auto ah sheet ah check pannum (Page refresh panna theva illa)
+    setInterval(checkLiveVideo, 30000); 
+</script>
