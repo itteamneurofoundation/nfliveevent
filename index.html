@@ -93,6 +93,7 @@
             color: var(--white);
             text-align: center;
             padding: 2rem;
+            z-index: 2;
         }
 
         .pulse-circle {
@@ -112,7 +113,7 @@
         }
 
         .video-wrapper iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1;
         }
 
         /* Layout Grid */
@@ -261,18 +262,18 @@
 
     <!-- Video Section -->
     <section class="video-container">
-        <div class="video-wrapper" id="videoWrapper">
-    <!-- Waiting Screen -->
-    <div class="waiting-screen" id="waitingScreen">
-        <div class="pulse-circle"><i class="fas fa-video"></i></div>
-        <h2 style="font-size: 2rem; margin-bottom: 10px;">Live Stream Will Begin Shortly</h2>
-        <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 15px;">20th September 2026 | Starts at 10:30 AM</p>
-        <div style="background: var(--primary); padding: 5px 20px; border-radius: 20px; font-weight: bold;">Checking for live video...</div>
-    </div>
+        <div class="video-wrapper">
+            
+            <div class="waiting-screen" id="waitingScreen">
+                <div class="pulse-circle"><i class="fas fa-video"></i></div>
+                <h2 style="font-size: 2rem; margin-bottom: 10px;">Live Stream Will Begin Shortly</h2>
+                <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 15px;">20th September 2026 | Starts at 10:30 AM</p>
+                <div id="statusText" style="background: var(--primary); padding: 5px 20px; border-radius: 20px; font-weight: bold;">Checking for live video...</div>
+            </div>
+            
+            <iframe id="liveFrame" src="" allow="autoplay; fullscreen" allowfullscreen style="display: none;"></iframe>
 
-    <!-- YouTube Iframe (First la hide aagi irukum) -->
-    <iframe id="liveFrame" src="" allow="autoplay; fullscreen" allowfullscreen style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"></iframe>
-</div>
+        </div>
     </section>
 
     <div class="container">
@@ -299,7 +300,6 @@
                     <h2 class="card-title">The Speaker</h2>
                 </div>
                 <div class="speaker-box">
-                    <!-- REPLACE WITH ORIGINAL IMAGE -->
                     <img src="speaker.jpg" alt="Dr. Roopesh Kumar" class="speaker-img" onerror="this.src='https://via.placeholder.com/150/078c80/fff?text=Speaker'">
                     <div>
                         <h3 style="font-size: 1.4rem; color: var(--text-dark);">Dr. Roopesh Kumar</h3>
@@ -347,73 +347,82 @@
             <h2 class="card-title" style="margin-bottom: 5px;"><i class="fas fa-hospital-alt"></i> Neuro Foundation, Salem</h2>
             <p class="highlight">Committed to Neurosciences</p>
             <div class="gallery">
-                <!-- REPLACE WITH ORIGINAL IMAGES -->
                 <img src="hospital-1.jpg" alt="Hospital View" onerror="this.src='https://via.placeholder.com/400x250/078c80/fff?text=Hospital+1'">
                 <img src="hospital-2.jpg" alt="Hospital View" onerror="this.src='https://via.placeholder.com/400x250/078c80/fff?text=Hospital+2'">
             </div>
         </div>
     </div>
-</body>
-</html>
-<script>
-    // INGA UNGA PUDHU GOOGLE APPS SCRIPT WEB APP URL-AH PASTE PANNUNGA
-    const API_URL = "https://script.google.com/macros/s/AKfycbwA-AYynw5KFyO6oTHDho0DqvnoSDdtUx3cLVlHMGqHArDnDhZAKtr75kJ5qWpK-MY2/exec";
 
-    // Full URL irunthalum ID ah mattum pirichu eduka intha function help pannum
-    function extractYouTubeID(url) {
-        if (!url) return null;
-        let videoID = url.trim();
-        
-        // Full URL ah iruntha check panrathu
-        if (videoID.includes('youtube.com') || videoID.includes('youtu.be')) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = videoID.match(regExp);
-            if (match && match[2].length === 11) {
-                return match[2];
+    <!-- SCRIPT SECTION -->
+    <script>
+        // 🛑 REPLACE THE LINK BELOW WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbwA-AYynw5KFyO6oTHDho0DqvnoSDdtUx3cLVlHMGqHArDnDhZAKtr75kJ5qWpK-MY2/exec";
+
+        function extractYouTubeID(url) {
+            if (!url) return null;
+            let videoID = String(url).trim();
+            if (videoID.includes('youtube.com') || videoID.includes('youtu.be')) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = videoID.match(regExp);
+                if (match && match[2].length === 11) {
+                    return match[2];
+                }
+            } else if (videoID.length === 11) {
+                return videoID;
             }
-        } else if (videoID.length === 11) {
-            return videoID; // Already verum ID ah iruntha apdiye eduthukum
+            return null;
         }
-        return null;
-    }
 
-    async function checkLiveVideo() {
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            
+        async function checkLiveVideo() {
             const waitingScreen = document.getElementById("waitingScreen");
             const liveFrame = document.getElementById("liveFrame");
+            const statusText = document.getElementById("statusText");
 
-            // Sheet la data iruntha process pannum
-            if(data.youtube_id && data.youtube_id.trim() !== "") {
-                let finalID = extractYouTubeID(data.youtube_id);
+            // If API_URL is not updated by user, don't throw error
+            if (API_URL === "INGA_UNGA_WEB_APP_URL_PASTE_PANNUNGA") {
+                statusText.innerText = "Please add Web App URL in code";
+                return;
+            }
+
+            try {
+                // Fetching data from Google Script
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error("Network response was not ok");
                 
-                if(finalID) {
-                    const videoUrl = "https://www.youtube.com/embed/" + finalID + "?autoplay=1";
+                const data = await response.json();
+                
+                if(data && data.youtube_id && data.youtube_id.toString().trim() !== "") {
+                    let finalID = extractYouTubeID(data.youtube_id);
                     
-                    if(liveFrame.src !== videoUrl) {
-                        liveFrame.src = videoUrl;
+                    if(finalID) {
+                        const videoUrl = "https://www.youtube.com/embed/" + finalID + "?autoplay=1&rel=0";
+                        
+                        if(liveFrame.src !== videoUrl) {
+                            liveFrame.src = videoUrl;
+                        }
+                        
+                        waitingScreen.style.display = "none";
+                        liveFrame.style.display = "block";
+                    } else {
+                        statusText.innerText = "Invalid Video Link in Sheet";
+                        waitingScreen.style.display = "flex";
+                        liveFrame.style.display = "none";
                     }
-                    
-                    waitingScreen.style.display = "none";
-                    liveFrame.style.display = "block";
                 } else {
-                    // Tappana link potruntha waiting screen kaatum
+                    statusText.innerText = "Waiting for live broadcast...";
                     waitingScreen.style.display = "flex";
                     liveFrame.style.display = "none";
+                    liveFrame.src = "";
                 }
-            } else {
-                // Sheet empty ah iruntha waiting screen kaatum
-                waitingScreen.style.display = "flex";
-                liveFrame.style.display = "none";
-                liveFrame.src = "";
+            } catch (error) {
+                console.error("Connection Error:", error);
+                statusText.innerText = "Connection issue. Retrying...";
             }
-        } catch (error) {
-            console.error("Live video check failed:", error);
         }
-    }
 
-    checkLiveVideo();
-    setInterval(checkLiveVideo, 30000); 
-</script>
+        // Run immediately on load, then check every 15 seconds
+        checkLiveVideo();
+        setInterval(checkLiveVideo, 15000); 
+    </script>
+</body>
+</html>
