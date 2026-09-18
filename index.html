@@ -356,8 +356,26 @@
 </body>
 </html>
 <script>
-    // Inga unga Google Apps Script Web App URL ah paste pannunga
+    // INGA UNGA PUDHU GOOGLE APPS SCRIPT WEB APP URL-AH PASTE PANNUNGA
     const API_URL = "https://script.google.com/macros/s/AKfycbwA-AYynw5KFyO6oTHDho0DqvnoSDdtUx3cLVlHMGqHArDnDhZAKtr75kJ5qWpK-MY2/exec";
+
+    // Full URL irunthalum ID ah mattum pirichu eduka intha function help pannum
+    function extractYouTubeID(url) {
+        if (!url) return null;
+        let videoID = url.trim();
+        
+        // Full URL ah iruntha check panrathu
+        if (videoID.includes('youtube.com') || videoID.includes('youtu.be')) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = videoID.match(regExp);
+            if (match && match[2].length === 11) {
+                return match[2];
+            }
+        } else if (videoID.length === 11) {
+            return videoID; // Already verum ID ah iruntha apdiye eduthukum
+        }
+        return null;
+    }
 
     async function checkLiveVideo() {
         try {
@@ -367,17 +385,24 @@
             const waitingScreen = document.getElementById("waitingScreen");
             const liveFrame = document.getElementById("liveFrame");
 
-            // Google sheet la video ID iruntha (Empty ah illana)
+            // Sheet la data iruntha process pannum
             if(data.youtube_id && data.youtube_id.trim() !== "") {
-                const videoUrl = "https://www.youtube.com/embed/" + data.youtube_id.trim() + "?autoplay=1";
+                let finalID = extractYouTubeID(data.youtube_id);
                 
-                // Puthu link iruntha mattum iframe src update aagum
-                if(liveFrame.src !== videoUrl) {
-                    liveFrame.src = videoUrl;
+                if(finalID) {
+                    const videoUrl = "https://www.youtube.com/embed/" + finalID + "?autoplay=1";
+                    
+                    if(liveFrame.src !== videoUrl) {
+                        liveFrame.src = videoUrl;
+                    }
+                    
+                    waitingScreen.style.display = "none";
+                    liveFrame.style.display = "block";
+                } else {
+                    // Tappana link potruntha waiting screen kaatum
+                    waitingScreen.style.display = "flex";
+                    liveFrame.style.display = "none";
                 }
-                
-                waitingScreen.style.display = "none";
-                liveFrame.style.display = "block";
             } else {
                 // Sheet empty ah iruntha waiting screen kaatum
                 waitingScreen.style.display = "flex";
@@ -389,9 +414,6 @@
         }
     }
 
-    // Page load aagum pothu check pannum
     checkLiveVideo();
-
-    // Ovvoru 30 seconds kum auto ah sheet ah check pannum (Page refresh panna theva illa)
     setInterval(checkLiveVideo, 30000); 
 </script>
